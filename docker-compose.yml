@@ -1,0 +1,37 @@
+version: "3"
+services:
+  db:
+    image: postgres:12.5
+    container_name: scraper-db
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: scraper
+      POSTGRES_DB: scraper-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - scraper-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "scrapper" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    networks:
+      - scraper-network
+
+
+
+volumes:
+  scraper-pgdata:
+
+networks:
+  scraper-network:
+    driver: bridge
